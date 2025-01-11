@@ -5,7 +5,7 @@ This data mining project looks into the Flint Water Crisis of 2014, an infamous 
 <br />
 
 
-<h2>Softwares Used</h2>
+<h2>Tools Used</h2>
 
 - <b>Tableau</b> 
 - <b>JMP</b>
