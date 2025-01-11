@@ -1,7 +1,7 @@
-<h1>Flint Water Crisis: Analytical Model for Lead Pipe Identification/h1>
+<h1>Flint Water Crisis: Analytical Model for Lead Pipe Identification
 
 <h2>Description</h2>
-This data mining project looks into the Flint Water Crisis of 2014, an infamous incident that has endangered the lives of Flint residents and necessitated the tracking and elimination of lead-based water distribution systems. The aim is to aid with the inspection process by developing an analytical model based on a sample of over 20,000 Flint parcels to target the ones most likely to contain lead pipes. Multiple data mining techniques are examined and the one with the largest validation AUC is selected.
+The Flint Water Crisis of 2014 endangered the lives of residents and necessitated the tracking and replacement of lead-based water distribution systems. Given limited financial resources and incomplete documentation, the city of Flint faced challenges in identifying parcels with lead service lines. This project addresses these challenges by developing an analytical model to prioritize parcels most likely to contain lead pipes, aiding in the inspection and replacement process.
 <br />
 
 
@@ -10,6 +10,15 @@ This data mining project looks into the Flint Water Crisis of 2014, an infamous 
 - <b>Tableau</b> 
 - <b>JMP</b>
 
+<h2>Objective</h2>
+
+To create a data-driven model using a dataset of over 20,000 Flint parcels to:
+
+- <b>Identify parcels likely to contain lead pipes.</b> 
+
+- <b>Optimize the inspection process by targeting high-risk areas.<b>
+
+- <b>Support the city’s efforts to eliminate lead-based service lines.<b>
 <h2>Program walk-through:</h2>
 
 <p align="center">
