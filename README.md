@@ -10,12 +10,13 @@ For this study, I examined five different data mining techniques: Logistic Regre
 - <b>Tableau</b> 
 - <b>JMP</b>
 
-## 1. The Dataset
+## 1. Data Preparation
+### The Dataset
 My analysis was carried out using JMP Pro on a dataset containing information for a sample of over 20,000 Flint parcels. The set comprised 40 predictor variables encompassing different aspects of a parcel, and a single target variable, the value of which determined the likelihood of a sample parcel containing lead pipes. To the extent that our purpose was classifying a parcel as likely to contain lead pipes or not, our analysis was a classification problem.
 
 The data was partitioned into a training set and a validation set using a 65%/35% split. The training portion was used to tune the different prediction models, while cross-validation was carried out on the validation set to determine the ideal model. Model performance was evaluated based on the Area under Curve (AUC) of the Receiver-Operator Characteristic (ROC) curve for validation.
 
-## 2. Data Preparation
+## 2. Data Process
 ### i. Data Cleaning
 
 As with most datasets of this size, the one at disposal was not bereft of flaws. The most prominent issue was missing values. Whether brought by due to lack of information, typing errata, or inadequate variable selection, the issue was tackled in one of three ways: (1) highlighting and categorizing the missing values, (2) excluding problematic variables, and (3) utilizing the Informative Missing feature in JMP Pro which allows for intelligent estimation of missing values. Other impediments included duplicates and highly correlated variables, both of which were addressed accordingly.
@@ -23,9 +24,11 @@ As with most datasets of this size, the one at disposal was not bereft of flaws.
 An important consideration that came up during the variable preparation process related to a subset of variables in our dataset that pertain to location. Those included information such as parcel zip code, latitude and longitude, and precinct, to name a few. The usage of such variables as predictors would introduce a phenomenon dubbed “spatial bias”, whereby proximity to other parcels would influence the classification decision for a sample parcel. Not only would that undermine other potential predictors, but it would also impose spatial restrictions on predictive models that would limit their ability to predict beyond the values within the dataset. A decision was therefore made to alter the data partition in a way that prevents overlap in precinct between training and validation. Moreover, all spatial variables were excluded from use as predictors.
 
 Beyond that, intuition and domain knowledge were used to introduce further modifications to the variables. In that regard, special note was made of the variable representing the age of a parcel. From the start, we had the expectation that it would be an important predictor in any model we build given what we historically know about the legality (or lack thereof) of lead usage in construction. Before putting our expectation to the test, we experimented with the representation of the variable. A decision was made to bin the year built in intervals that captured patterns within the data. The intervals are shown in the plot below along with the percentage of parcels containing lead in our sample for each interval. We used the percentage rather than the number of parcels to mitigate scale issues, as some years are much more abundant than others in our sample.
+(Note: mention Removing outliers)
 
 
-![Figure in the liquor](https://i.imgur.com/5vtPw31.png)
+<img src="https://i.imgur.com/ANofYM9.png" height="50%" width="50%" alt="Binning Years Built"/>
+
 
 
 
@@ -42,6 +45,51 @@ The plot reveals varying percentages for the different intervals, with an early 
 - The variables Prop Class and Old Prop Class provided redundant information, so the decision was made to exclude one of them, specifically Old Prop class.
 - DRAFT Zone was excluded as it represented a symbolic facsimile of Future Landuse.
 - The following variables were excluded from analysis: pid, Property Zip Code, Latitude, Longitude, Ward, PRECINCT, CENTRACT, CENBLOCK, SL_TYPE, SL_TYPE2, and Last_Test.
+
+# Variable Selection and Our First Models
+With Data processing complete, we proceeded to the modeling phase, in which we examined five different predictive models: Logistic Regression, Classification and Regression Trees (CART), Random Forests, Gradient Boosting, and Neural Networks. A preliminary step in modeling is variable selection, i.e., the inputs to the different models. Out of the models mentioned above, Logistic Regression and CART models have the distinction of providing automated variable selection, an option
+we utilized for two purposes: (1) reducing the number of variables into a subset that can be input into the more sophisticated models, thereby reducing complexity and providing more parsimonious models, and (2) understanding the most important predictors in our analysis. Further, the two models were assessed as standalone models and represented a benchmark against which the more complex models were measured. The models are discussed in the next 2 subsections.
+
+## Logistic Regression
+
+Variable selection with Logistic Regression was done through a Stepwise approach. The technique yields 13 variables that are then input into a Logistic Regression model. After some experimenting, we opted to eliminate one of the variables, specifically house condition in 2012, for a slight improvement in performance. This hearkens back to our discussion on issues within the dataset. There were two variables describing house condition in the set, one for 2012 and one for 2014. Not only was there no obvious distinction between the two, but the descriptions themselves were ambiguous at best. It came as no surprise to us, therefore, that the model seemed to perform better with those variables excluded.
+
+The Effect Summary dialog for the logistic regression model is shown in figure below. The model includes the variables Year Built Binned, SL_Lead, Zoning 2, Hydrant Type, FoundLead?, Building Value, SL_private_inspection, Land Value, HomeSEV, Residential Building Style, Future Landuse, and Tested?. The variable Housing Condition 2012 2 was originally part of the model but was removed for better validation performance.
+
+<img src="https://i.imgur.com/BZXieFb.png" height="50%" width="50%" alt="Effect Summary"/>
+
+I utilized another useful feature of Logistic Regression models, which is assessing variable importance. This gave us a general idea of what variables among the ones in the model were most useful in explaining/predicting the target variable.
+
+<img src="https://i.imgur.com/JNLQ3zw.png" height="50%" width="50%" alt="Variable Importance Logistic Regression"/>
+
+<img src="https://i.imgur.com/HaPPhiB.png" height="50%" width="50%" alt="ROC of Logistic Regression"/>
+
+The validation AUC for this model is 0.9568, or 95.68%
+
+ There is a similar feature in CART models of which we also took advantage. The idea was to compare, and ultimately merge the results of the two variable selection techniques into a single defining set.
+
+## Classtification Tree (CART) Model
+
+Variable selection in CART is more straightforward given that it is applied by default in the process of growing out the classification tree. We first present the validation ROC curve of this model in figure 3. The validation AUC for this model is 0.9558, or 95.58%.
+
+<img src="https://i.imgur.com/iu8tSny.png" height="50%" width="50%" alt="ROC CART"/>
+
+There are 16 splits in the final tree with 8 variables included in at least 1 split. Conveniently, all 8 of the aforementioned variables were also recommended by stepwise regression, i.e., as a whole, they represented a subset of the variables included in our logistic regression model. For that reason, we adopted the entire set composed of 12
+variables discussed in the previous section as an overarching variable set.
+
+ <img src="https://i.imgur.com/tO8imAH.png" height="50%" width="50%" alt="CART simplified"/>
+
+We used the Column Contributions feature for CART models in JMP Pro to assess variable importance. The results were compared to those obtained for Logistic Regression. The two models seemed to agree on the importance of four variables that we examine in the next section.
+
+The Leaf Report and Column Contributions platforms for this model are shown in the two figures below. The final tree contains 16 splits and includes the variables Year Built Binned, SL_Lead, Zoning 2, Hydrant Type, SL_private_inspection, Land Value, HomeSEV, FoundLead?, Residential Building Style, Building Storeys, Future Landuse, and Tested?.
+
+<p align="center">
+Leaf Report: <br/>
+ <img src="https://i.imgur.com/DbG8rzI.png" height="50%" width="50%" alt="Leaf Report"/>
+
+ <p align="center">
+Column Contribution: <br/>
+ <img src="https://i.imgur.com/DQOffcO.png" height="50%" width="50%" alt="Column Contribution Table"/>
 
 <h2>Objective</h2>
 
