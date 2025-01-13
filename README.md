@@ -46,11 +46,11 @@ The plot reveals varying percentages for the different intervals, with an early 
 - DRAFT Zone was excluded as it represented a symbolic facsimile of Future Landuse.
 - The following variables were excluded from analysis: pid, Property Zip Code, Latitude, Longitude, Ward, PRECINCT, CENTRACT, CENBLOCK, SL_TYPE, SL_TYPE2, and Last_Test.
 
-# Variable Selection and Our First Models
+## 3. Variable Selection and Our First Models
 With Data processing complete, we proceeded to the modeling phase, in which we examined five different predictive models: Logistic Regression, Classification and Regression Trees (CART), Random Forests, Gradient Boosting, and Neural Networks. A preliminary step in modeling is variable selection, i.e., the inputs to the different models. Out of the models mentioned above, Logistic Regression and CART models have the distinction of providing automated variable selection, an option
 we utilized for two purposes: (1) reducing the number of variables into a subset that can be input into the more sophisticated models, thereby reducing complexity and providing more parsimonious models, and (2) understanding the most important predictors in our analysis. Further, the two models were assessed as standalone models and represented a benchmark against which the more complex models were measured. The models are discussed in the next 2 subsections.
 
-## Logistic Regression
+### i. Logistic Regression
 
 Variable selection with Logistic Regression was done through a Stepwise approach. The technique yields 13 variables that are then input into a Logistic Regression model. After some experimenting, we opted to eliminate one of the variables, specifically house condition in 2012, for a slight improvement in performance. This hearkens back to our discussion on issues within the dataset. There were two variables describing house condition in the set, one for 2012 and one for 2014. Not only was there no obvious distinction between the two, but the descriptions themselves were ambiguous at best. It came as no surprise to us, therefore, that the model seemed to perform better with those variables excluded.
 
@@ -68,11 +68,11 @@ The validation AUC for this model is 0.9568, or 95.68%
 
  There is a similar feature in CART models of which we also took advantage. The idea was to compare, and ultimately merge the results of the two variable selection techniques into a single defining set.
 
-## Classtification Tree (CART) Model
+### ii. Classtification Tree (CART) Model
 
 Variable selection in CART is more straightforward given that it is applied by default in the process of growing out the classification tree. We first present the validation ROC curve of this model in figure 3. The validation AUC for this model is 0.9558, or 95.58%.
 
-<img src="https://i.imgur.com/iu8tSny.png" height="50%" width="50%" alt="ROC CART"/>
+<img src="https://i.imgur.com/QQaWrcu.png" height="50%" width="50%" alt="ROC CART"/>
 
 There are 16 splits in the final tree with 8 variables included in at least 1 split. Conveniently, all 8 of the aforementioned variables were also recommended by stepwise regression, i.e., as a whole, they represented a subset of the variables included in our logistic regression model. For that reason, we adopted the entire set composed of 12
 variables discussed in the previous section as an overarching variable set.
@@ -91,52 +91,73 @@ Leaf Report: <br/>
 Column Contribution: <br/>
  <img src="https://i.imgur.com/DQOffcO.png" height="50%" width="50%" alt="Column Contribution Table"/>
 
-<h2>Objective</h2>
+ ## 4. Significant variables
 
-To create a data-driven model using a dataset of over 20,000 Flint parcels to:
+ ### Year Built 
+ 
+ This variable was discussed in depth earlier. Its inclusion in this list vindicates our intuitive expectations regarding its importance.
 
-- <b>Identify parcels likely to contain lead pipes.</b> 
+ ### Servic Line Type
 
-- <b>Optimize the inspection process by targeting high-risk areas.<b>
+ This variable, dubbed SL_Lead, describes whether the service line of a parcel contains lead based on historical records that were retrieved from the basement of Flint City Hall. The records were hand-written and unannotated, and much work was done to digitize them. Figure 5 shows the percentage of lead-infested parcels by the variable SL_Lead.
 
-- <b>Support the city’s efforts to eliminate lead-based service lines.<b>
-<h2>Program walk-through:</h2>
+ <img src="https://i.imgur.com/yETBTEX.png" height="50%" width="50%" alt="% of parcels with Lead Pipes"/>
 
-<p align="center">
-Launch the utility: <br/>
-<img alt="Top 10 Requests" src="https://imgur.com/5vtPw31"/>
-<br />
-<br />
-Select the disk:  <br/>
-<img src="https://imgur.com/5vtPw31" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
-<br />
-Enter the number of passes: <br/>
-<img src="https://i.imgur.com/nCIbXbg.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
-<br />
-Confirm your selection:  <br/>
-<img src="https://i.imgur.com/cdFHBiU.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
-<br />
-Wait for process to complete (may take some time):  <br/>
-<img src="https://i.imgur.com/JL945Ga.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
-<br />
-Sanitization complete:  <br/>
-<img src="https://i.imgur.com/K71yaM2.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
-<br />
-Observe the wiped disk:  <br/>
-<img src="https://i.imgur.com/AeZkvFQ.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-</p>
+ It is clear from the figure that the percentage of parcels with lead pipes increases dramatically when SL_Lead=1, i.e., for parcels thought to contain lead pipes according to the recovered records. This lends some credibility to the records and is a testament to the work of the UM students who handled the digitization process.
+ 
+### Zoning Classiication
 
-<!--
- ```diff
-- text in red
-+ text in green
-! text in orange
-# text in gray
-@@ text in purple (and bold)@@
-```
---!>
+Zoning allows local governments to regulate which areas under their jurisdiction may have real estate or land used for particular purposes. Classifications are provided by the city of Flint, and are ascribed alphanumeric acronyms, each with a different interpretation. It is worthy to note that the variable for zoning contained multiple cases of typing errata. Figure 6 shows the number of parcels containing lead pipes by official zoning classification. Zones A-2 and B exhibit the most cases by far. The official Flint zoning classification defines the former as a “Single-Family Medium-Density District” and the latter as a “Two-Family District”. The implication that family homes are at the center of the crisis is a stark reminder of its severity and a call for bigger strides to be taken towards ending it once and for all.
+
+<img src="https://i.imgur.com/j9yfLda.png" height="50%" width="50%" alt="Lead by Zones"/>
+
+
+### Hydrant type
+
+Figure 7 shows the number and percentage of parcels containing lead pipes by the closest hydrant type to a parcel. The inclusion of this variable is a little peculiar. However, the figure does reveal some interesting observations. For example, parcels with proximity to a fire hydrant of type T.C are the most prevalent in our sample, yet as a percentage, are the smallest. Contrast that to parcels with proximity to a hydrant of type Dar, which despite being less than half as abundant as T.C, are the most lead-infested and several questions arise regarding the fire hydrant system in Flint.
+
+<img src="https://i.imgur.com/or1WDBe.png" height="50%" width="50%" alt="% of Lead by Hydrant Type"/>
+
+ ## 5. More Complex Models
+
+### Gradient Boosting
+
+This model was run using the same 12-variables subset discussed above. No further modifications were made.
+
+<img src="https://i.imgur.com/zxCELgg.png" height="50%" width="50%" alt="ROC Gradient Boosting"/>
+
+### Random Forest
+
+Similarly, this model was run using the 12-variable input subset. A random seed was set to suppress randomness and reproduce results.
+
+<img src="https://i.imgur.com/Ci2r1NF.png" height="50%" width="50%" alt="ROC Random Forest"/>
+
+### Neural Network
+
+A neural network was initially run with the 12-variable subset discussed in logistic regression as input, with the exception of Future Landuse, which was removed to obtain better validation performance.. The number of hidden layers and number of nodes were tuned manually. The first neural network was run using one hidden layer and three nodes of hyperbolic tangent function, whereas the second was run using two hidden layers with 14 hyperbolic tangent nodes, 10 in the first and 3 in the second. The random seed was set to 12 to eliminate the randomness in the model brought by the initialization of the weights and biases of nodes. Validation ROC curves for the two best performing models are displayed below. 
+
+<img src="https://i.imgur.com/b9Yinna.png" height="50%" width="50%" alt="ROC Neural 1"/>
+
+<img src="https://i.imgur.com/st7vTk1.png" height="50%" width="50%" alt="ROC Neural 2"/>
+
+### Ensembles
+
+Before arriving at a final decision, we extended our analysis to ensembles, whereby we examined different combinations of the models at our disposal. The best performing model was an average of the gradient boosting model with the two neural network models. The validation ROC curve for this model is displayed in figure 11.
+
+<img src="https://i.imgur.com/XdbMUlY.png" height="50%" width="50%" alt="ROC Ensembles"/>
+
+
+ ## 6. Results
+
+ Figure 12 shows validation AUC comparisons for all models described in this analysis. With an AUC of 96.40%, the ensemble model exhibits the best performance, and is therefore our model of choice for predicting whether a parcel is likely to contain lead pipes.
+
+ <img src="https://i.imgur.com/usXQ8vM.png" height="50%" width="50%" alt="ROC Comparison"/>
+
+ ## 7. Future Testing 
+
+ The foregoing analyses apply to the dataset at our disposal, whereby cross-validation was used to assess predictive performance. With that said, the analyses can be extended to include external data. In fact, we have appended an additional test set to our existing dataset so that any modifications done to our variables would reflect onto those in the test set.
+ 
+
+
+
+
