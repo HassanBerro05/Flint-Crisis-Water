@@ -105,7 +105,7 @@ Column Contribution: <br/>
 
  This variable, dubbed SL_Lead, describes whether the service line of a parcel contains lead based on historical records that were retrieved from the basement of Flint City Hall. The records were hand-written and unannotated, and much work was done to digitize them. Figure 5 shows the percentage of lead-infested parcels by the variable SL_Lead.
 
- <img src="https://i.imgur.com/yETBTEX.png" height="50%" width="50%" alt="% of parcels with Lead Pipes"/>
+ <img src="https://i.imgur.com/yETBTEX.png" height="60%" width="60%" alt="% of parcels with Lead Pipes"/>
 
  It is clear from the figure that the percentage of parcels with lead pipes increases dramatically when SL_Lead=1, i.e., for parcels thought to contain lead pipes according to the recovered records. This lends some credibility to the records and is a testament to the work of the UM students who handled the digitization process.
  
