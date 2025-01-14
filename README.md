@@ -11,7 +11,7 @@ For this study, I examined five different data mining techniques: Logistic Regre
 - <b>JMP</b>
 
 ## 1. Data Preparation
-### The Dataset [Download Dataset (Raw)](https://raw.githubusercontent.com/your-username/your-repository/main/data/dataset.xlsx)
+### The Dataset [Download Dataset (Raw)](https://raw.githubusercontent.com/HassanBerro05/Flint-lead-pipe-analysis/refs/heads/main/flint_data.csv)
 
 My analysis was carried out using JMP Pro on a dataset containing information for a sample of over 20,000 Flint parcels. The set comprised 40 predictor variables encompassing different aspects of a parcel, and a single target variable, the value of which determined the likelihood of a sample parcel containing lead pipes. To the extent that my purpose was classifying a parcel as likely to contain lead pipes or not, my analysis was a classification problem.
 
