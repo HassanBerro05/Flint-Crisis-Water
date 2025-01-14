@@ -52,18 +52,17 @@ The plot reveals varying percentages for the different intervals, with an early 
 - The following variables were excluded from analysis: pid, Property Zip Code, Latitude, Longitude, Ward, PRECINCT, CENTRACT, CENBLOCK, SL_TYPE, SL_TYPE2, and Last_Test.
 
 ## 3. Variable Selection and Our First Models
-With Data processing complete, we proceeded to the modeling phase, in which we examined five different predictive models: Logistic Regression, Classification and Regression Trees (CART), Random Forests, Gradient Boosting, and Neural Networks. A preliminary step in modeling is variable selection, i.e., the inputs to the different models. Out of the models mentioned above, Logistic Regression and CART models have the distinction of providing automated variable selection, an option
-we utilized for two purposes: (1) reducing the number of variables into a subset that can be input into the more sophisticated models, thereby reducing complexity and providing more parsimonious models, and (2) understanding the most important predictors in our analysis. Further, the two models were assessed as standalone models and represented a benchmark against which the more complex models were measured. The models are discussed in the next 2 subsections.
+With Data processing complete, I proceeded to the modeling phase, in which I examined five different predictive models: Logistic Regression, Classification and Regression Trees (CART), Random Forests, Gradient Boosting, and Neural Networks. A preliminary step in modeling is variable selection, i.e., the inputs to the different models. Out of the models mentioned above, Logistic Regression and CART models have the distinction of providing automated variable selection, an option utilized for two purposes: (1) reducing the number of variables into a subset that can be input into the more sophisticated models, thereby reducing complexity and providing more parsimonious models, and (2) understanding the most important predictors in our analysis. Further, the two models were assessed as standalone models and represented a benchmark against which the more complex models were measured. The models are discussed in the next 2 subsections.
 
 ### i. Logistic Regression
 
-Variable selection with Logistic Regression was done through a Stepwise approach. The technique yields 13 variables that are then input into a Logistic Regression model. After some experimenting, we opted to eliminate one of the variables, specifically house condition in 2012, for a slight improvement in performance. This hearkens back to our discussion on issues within the dataset. There were two variables describing house condition in the set, one for 2012 and one for 2014. Not only was there no obvious distinction between the two, but the descriptions themselves were ambiguous at best. It came as no surprise to us, therefore, that the model seemed to perform better with those variables excluded.
+Variable selection with Logistic Regression was done through a Stepwise approach. The technique yields 13 variables that are then input into a Logistic Regression model. After some experimenting, I opted to eliminate one of the variables, specifically house condition in 2012, for a slight improvement in performance. This hearkens back to our discussion on issues within the dataset. There were two variables describing house condition in the set, one for 2012 and one for 2014. Not only was there no obvious distinction between the two, but the descriptions themselves were ambiguous at best. It came as no surprise, therefore, that the model seemed to perform better with those variables excluded.
 
 The Effect Summary dialog for the logistic regression model is shown in figure below. The model includes the variables Year Built Binned, SL_Lead, Zoning 2, Hydrant Type, FoundLead?, Building Value, SL_private_inspection, Land Value, HomeSEV, Residential Building Style, Future Landuse, and Tested?. The variable Housing Condition 2012 2 was originally part of the model but was removed for better validation performance.
 
 <img src="https://i.imgur.com/BZXieFb.png" height="50%" width="50%" alt="Effect Summary"/>
 
-I utilized another useful feature of Logistic Regression models, which is assessing variable importance. This gave us a general idea of what variables among the ones in the model were most useful in explaining/predicting the target variable.
+I utilized another useful feature of Logistic Regression models, which is assessing variable importance. This gave a general idea of what variables among the ones in the model were most useful in explaining/predicting the target variable.
 
 <img src="https://i.imgur.com/JNLQ3zw.png" height="50%" width="50%" alt="Variable Importance Logistic Regression"/>
 
@@ -71,20 +70,20 @@ I utilized another useful feature of Logistic Regression models, which is assess
 
 The validation AUC for this model is 0.9568, or 95.68%
 
- There is a similar feature in CART models of which we also took advantage. The idea was to compare, and ultimately merge the results of the two variable selection techniques into a single defining set.
+ There is a similar feature in CART models of which I also took advantage. The idea was to compare, and ultimately merge the results of the two variable selection techniques into a single defining set.
 
 ### ii. Classtification Tree (CART) Model
 
-Variable selection in CART is more straightforward given that it is applied by default in the process of growing out the classification tree. We first present the validation ROC curve of this model in figure 3. The validation AUC for this model is 0.9558, or 95.58%.
+Variable selection in CART is more straightforward given that it is applied by default in the process of growing out the classification tree. I first present the validation ROC curve of this model in figure 3. The validation AUC for this model is 0.9558, or 95.58%.
 
 <img src="https://i.imgur.com/QQaWrcu.png" height="50%" width="50%" alt="ROC CART"/>
 
-There are 16 splits in the final tree with 8 variables included in at least 1 split. Conveniently, all 8 of the aforementioned variables were also recommended by stepwise regression, i.e., as a whole, they represented a subset of the variables included in our logistic regression model. For that reason, we adopted the entire set composed of 12
+There are 16 splits in the final tree with 8 variables included in at least 1 split. Conveniently, all 8 of the aforementioned variables were also recommended by stepwise regression, i.e., as a whole, they represented a subset of the variables included in our logistic regression model. For that reason, I adopted the entire set composed of 12
 variables discussed in the previous section as an overarching variable set.
 
  <img src="https://i.imgur.com/tO8imAH.png" height="50%" width="50%" alt="CART simplified"/>
 
-We used the Column Contributions feature for CART models in JMP Pro to assess variable importance. The results were compared to those obtained for Logistic Regression. The two models seemed to agree on the importance of four variables that we examine in the next section.
+Column Contributions feature was used for CART models in JMP Pro to assess variable importance. The results were compared to those obtained for Logistic Regression. The two models seemed to agree on the importance of four variables that are examined in the next section.
 
 The Leaf Report and Column Contributions platforms for this model are shown in the two figures below. The final tree contains 16 splits and includes the variables Year Built Binned, SL_Lead, Zoning 2, Hydrant Type, SL_private_inspection, Land Value, HomeSEV, FoundLead?, Residential Building Style, Building Storeys, Future Landuse, and Tested?.
 
@@ -147,7 +146,7 @@ A neural network was initially run with the 12-variable subset discussed in logi
 
 ### Ensembles
 
-Before arriving at a final decision, we extended our analysis to ensembles, whereby we examined different combinations of the models at our disposal. The best performing model was an average of the gradient boosting model with the two neural network models. The validation ROC curve for this model is displayed in figure 11.
+Before arriving at a final decision, I extended our analysis to ensembles, whereby I examined different combinations of the models at our disposal. The best performing model was an average of the gradient boosting model with the two neural network models. The validation ROC curve for this model is displayed in figure 11.
 
 <img src="https://i.imgur.com/XdbMUlY.png" height="50%" width="50%" alt="ROC Ensembles"/>
 
